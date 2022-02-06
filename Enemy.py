@@ -8,6 +8,7 @@ from EnemyBullet import EnemyBullet
 from Constants import *
 
 
+# Enemy Class
 class Enemy:
     def __init__(self):
         self.max_bullet_num = enemyBullets
@@ -39,10 +40,10 @@ class Enemy:
         cos_theta = math.cos(math.radians(self.theta))
         sin_theta = math.sin(math.radians(self.theta))
         return [
-            (self.x - enemyRadius*cos_theta, self.y + enemyRadius*sin_theta),
-            (self.x - enemyRadius*cos_theta, self.y - enemyRadius*sin_theta),
-            (self.x + enemyRadius*cos_theta, self.y + enemyRadius*sin_theta),
-            (self.x + enemyRadius*cos_theta, self.y - enemyRadius*sin_theta)
+            (self.x - enemyRadius * cos_theta, self.y + enemyRadius * sin_theta),
+            (self.x - enemyRadius * cos_theta, self.y - enemyRadius * sin_theta),
+            (self.x + enemyRadius * cos_theta, self.y + enemyRadius * sin_theta),
+            (self.x + enemyRadius * cos_theta, self.y - enemyRadius * sin_theta)
         ]
 
     def draw(self, screen):
