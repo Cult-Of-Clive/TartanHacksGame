@@ -16,3 +16,6 @@ Blue = 2 uses, Orange = 1 use.
 ## Enemies
 Purple enemies will appear on screen and shoot lasers randomly. They will also temporarily slow down time. The more you hit an enemy, the more frequently it will be able
 to shoot bullets. This can be seen by a change in their "rotation" speed (how fast the shape in the middle oscillates). Hitting an enemy enough kills it, default hp is 5 (5 hits to kill it).
+
+## Installation
+Open this game as a project in PyCharm and click the run button.
