@@ -25,6 +25,7 @@ if __name__ == '__main__':
     pygame.mixer.music.load(background_music_file)
     pygame.mixer.music.play(-1)
     collision_sound = pygame.mixer.Sound(impact_file)
+    collision_sound.set_volume(0.3)
     force_field_impact = pygame.mixer.Sound(force_field_file)
     enemy_death = pygame.mixer.Sound(enemy_death_file)
 
