@@ -3,6 +3,7 @@
 # (x2, y2) and (x3, y3)
 import math
 
+
 # Get the area of a triangle from its vertices
 def area(x1, y1, x2, y2, x3, y3):
     return abs((x1 * (y2 - y3) + x2 * (y3 - y1)
@@ -12,6 +13,7 @@ def area(x1, y1, x2, y2, x3, y3):
 # A function to check whether point P(x, y)
 # lies inside the triangle formed by
 # A(x1, y1), B(x2, y2) and C(x3, y3)
+# Code credit: https://www.geeksforgeeks.org/check-whether-a-given-point-lies-inside-a-triangle-or-not/
 def point_in_triangle(pt, triangle):
     # Break the triangle up into coordinates
     x1 = triangle[0][0]
@@ -40,6 +42,7 @@ def point_in_triangle(pt, triangle):
     # Check if sum of A1, A2 and A3
     # is same as A
     return abc == pbc + pac + pab
+
 
 # Gets the distance between two points
 def distance(p1, p2):
