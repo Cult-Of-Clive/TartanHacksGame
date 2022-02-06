@@ -3,7 +3,7 @@
 # (x2, y2) and (x3, y3)
 import math
 
-
+# Get the area of a triangle from its vertices
 def area(x1, y1, x2, y2, x3, y3):
     return abs((x1 * (y2 - y3) + x2 * (y3 - y1)
                 + x3 * (y1 - y2)) / 2.0)
@@ -41,7 +41,7 @@ def point_in_triangle(pt, triangle):
     # is same as A
     return abc == pbc + pac + pab
 
-
+# Gets the distance between two points
 def distance(p1, p2):
     dx = p1[0] - p2[0]
     dy = p1[1] - p2[1]

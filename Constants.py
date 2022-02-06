@@ -8,6 +8,8 @@ screenSize = [500, 500]
 
 # Game Constants
 startingLives = 10
+fontType = 'Comic Sans MS'
+fontScale = 30
 
 # Ship Constants
 shipSpeed = 0.1
@@ -34,7 +36,7 @@ maxPowerups = 2
 # Enemy Constants
 enemySpeed = 0.1
 enemyRotationSpeed = 0.1
-enemyRotationSpeedIncrement = 0.1
+enemyRotationSpeedIncrement = 0.05
 enemyRadius = 20
 enemyColor = (255, 0, 255)
 enemyThickness = 3

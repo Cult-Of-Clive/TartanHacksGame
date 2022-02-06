@@ -1,9 +1,4 @@
-# Press the green button in the gutter to run the script.
 import time
-import timeit
-
-from pygame import K_UP, K_DOWN, K_RIGHT, K_s, K_LEFT, K_w, K_d, K_a, K_SPACE, K_LSHIFT, KMOD_LSHIFT
-
 from Constants import *
 from Enemy import Enemy
 from Powerup import Powerup
@@ -12,6 +7,7 @@ from Ship import Ship
 import pygame
 
 
+# Renders the victory screen after a player wins
 def render_victory_screen(victory_screen, victory_font, player, color):
     victory_screen.fill(backgroundColor)
     victory_text = victory_font.render(f'Player {player} has won!', False, color)
@@ -19,12 +15,15 @@ def render_victory_screen(victory_screen, victory_font, player, color):
     pygame.display.flip()
 
 
+# The main function
 if __name__ == '__main__':
+    # Set up pygame
     pygame.init()
+    font = pygame.font.SysFont(fontType, fontScale)
+
+    # Set up music
     pygame.mixer.music.load(background_music_file)
     pygame.mixer.music.play(-1)
-    font = pygame.font.SysFont('Comic Sans MS', 30)
-
     collision_sound = pygame.mixer.Sound(impact_file)
     force_field_impact = pygame.mixer.Sound(force_field_file)
     enemy_death = pygame.mixer.Sound(enemy_death_file)
@@ -33,14 +32,17 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(screenSize)
 
     # Set up Players
+    # Note: Ship 1 = green ship, Ship 2 = red ship by default
     ship1 = Ship(player1StartX, player1StartY, player1Color, shipSpeed, startingBullets, True)
     player1Lives = startingLives
     ship2 = Ship(player2StartX, player2StartY, player2Color, shipSpeed, startingBullets, False)
     player2Lives = startingLives
 
+    # Create powerups and enemies
     powerups = []
     enemies = []
 
+    # Start game timers
     powerup_timer_start = time.time()
     enemy_timer_start = time.time()
     clock = pygame.time.Clock()
@@ -50,11 +52,13 @@ if __name__ == '__main__':
     while running:
         clock.tick(2000)
 
+        # If it's time to create a new powerup
         if time.time() - powerup_timer_start > powerupCreationTimeSeconds:
             if len(powerups) < maxPowerups:
                 powerups.append(Powerup())
             powerup_timer_start = time.time()
 
+        # If it's time to create a new enemy
         if time.time() - enemy_timer_start > enemyCreationTime:
             if len(enemies) < maxEnemies:
                 enemies.append(Enemy())
@@ -95,10 +99,13 @@ if __name__ == '__main__':
         # Fill the background with white
         screen.fill(backgroundColor)
 
+        # Handles bullet collision for bullets shot by ship 1
         for bullet in ship1.bullets:
+            # If the bullet hit ship 2
             if point_in_triangle((bullet.x, bullet.y), ship2.ship_coordinates()):
                 ship1.bullets.remove(bullet)
 
+                # Handle force field case
                 if ship2.force_field:
                     ship2.force_field_uses -= 1
                     force_field_impact.play()
@@ -106,21 +113,26 @@ if __name__ == '__main__':
                     player2Lives -= 1
                     collision_sound.play()
 
+            # Check if ship 1's bullet hit a powerup
             for ship in powerups:
                 if distance((bullet.x, bullet.y), (ship.x, ship.y)) < powerupRadius:
                     ship1.bullets.remove(bullet)
                     ship.take_green_damage(powerupDamage)
 
+            # Check if ship 1's bullet hit an enemy
             for enemy in enemies:
                 if distance((bullet.x, bullet.y), (enemy.x, enemy.y)) < enemyRadius:
                     ship1.bullets.remove(bullet)
                     enemy.take_damage()
                     collision_sound.play()
 
+        # Handles bullet collision for bullets shot by ship 2
         for bullet in ship2.bullets:
+            # If the bullet hit ship 1
             if point_in_triangle((bullet.x, bullet.y), ship1.ship_coordinates()):
                 ship2.bullets.remove(bullet)
 
+                # Handle force field case
                 if ship1.force_field:
                     ship1.force_field_uses -= 1
                     force_field_impact.play()
@@ -128,32 +140,39 @@ if __name__ == '__main__':
                     player1Lives -= 1
                     collision_sound.play()
 
+            # Check if ship 2's bullet hit a powerup
             for ship in powerups:
                 if distance((bullet.x, bullet.y), (ship.x, ship.y)) < powerupRadius:
                     ship2.bullets.remove(bullet)
                     ship.take_red_damage(powerupDamage)
 
+            # Check if ship 2's bullet hit an enemy
             for enemy in enemies:
                 if distance((bullet.x, bullet.y), (enemy.x, enemy.y)) < enemyRadius:
                     ship2.bullets.remove(bullet)
                     enemy.take_damage()
                     collision_sound.play()
 
+        # Check if the enemy's bullets hit one of the ships
         for enemy in enemies:
             for bullet in enemy.bullets:
+                # If one hit ship 1
                 if point_in_triangle((bullet.x, bullet.y), ship1.ship_coordinates()):
-                    if point_in_triangle((bullet.x, bullet.y), ship1.ship_coordinates()):
-                        enemy.bullets.remove(bullet)
+                    enemy.bullets.remove(bullet)
 
-                        if ship1.force_field:
-                            ship1.force_field_uses -= 1
-                            force_field_impact.play()
-                        else:
-                            player1Lives -= 1
-                            collision_sound.play()
+                    # Handle force field case
+                    if ship1.force_field:
+                        ship1.force_field_uses -= 1
+                        force_field_impact.play()
+                    else:
+                        player1Lives -= 1
+                        collision_sound.play()
+
+                # If one hit ship 2
                 if point_in_triangle((bullet.x, bullet.y), ship2.ship_coordinates()):
                     enemy.bullets.remove(bullet)
 
+                    # Handle force field case
                     if ship2.force_field:
                         ship2.force_field_uses -= 1
                         force_field_impact.play()
@@ -161,9 +180,12 @@ if __name__ == '__main__':
                         player2Lives -= 1
                         collision_sound.play()
 
+        # Handles powerups
         for powerup in powerups:
             powerup.move()
             powerup.draw(screen)
+
+            # Awards shield to destroying ship if broken
             if powerup.color[0] == 255:
                 ship2.activate_force_field()
                 powerups.remove(powerup)
@@ -171,10 +193,12 @@ if __name__ == '__main__':
                 ship1.activate_force_field()
                 powerups.remove(powerup)
 
-        # Draw a players in the center
+        # Draw a players
         ship1.draw(screen)
         ship2.draw(screen)
 
+        # Draw the enemies and have them shoot bullets
+        # Also handle enemy death
         for enemy in enemies:
             if enemy.alive:
                 enemy.draw(screen)
@@ -183,12 +207,13 @@ if __name__ == '__main__':
                 enemies.remove(enemy)
                 enemy_death.play()
 
+        # Create lives counter
         player1LivesText = font.render(f'Player 1: {player1Lives}', False, textColor)
         player2LivesText = font.render(f'Player 2: {player2Lives}', False, textColor)
         screen.blit(player1LivesText, (screenSize[1] - 170, 0))
         screen.blit(player2LivesText, (screenSize[1] - 170, screenSize[1] - 50))
 
-        winner_color = (0, 0, 0)
+        # Case where someone won the game
         if player1Lives == 0 or player2Lives == 0:
             if player1Lives == 0:
                 winner = 2
@@ -199,6 +224,8 @@ if __name__ == '__main__':
 
             pygame.mixer.music.stop()
             pygame.mixer.Sound(ending_explosion_file).play()
+
+            # Start victory screen
             while running:
                 render_victory_screen(screen, font, winner, winner_color)
                 for event in pygame.event.get():

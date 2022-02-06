@@ -36,6 +36,7 @@ class Enemy:
         self.y = random.randint(0, screenSize[1])
         self.laser_effect = pygame.mixer.Sound(laser_sound_file)
 
+    # Get the "square" part of the enemy. This is the strange shape inside the circle
     def get_square(self):
         cos_theta = math.cos(math.radians(self.theta))
         sin_theta = math.sin(math.radians(self.theta))
@@ -46,6 +47,7 @@ class Enemy:
             (self.x + enemyRadius * cos_theta, self.y - enemyRadius * sin_theta)
         ]
 
+    # Draw the enemy
     def draw(self, screen):
         pygame.draw.circle(screen, enemyColor, (self.x, self.y), enemyRadius, enemyThickness)
         pygame.draw.polygon(screen, enemyColor, self.get_square())
@@ -57,11 +59,13 @@ class Enemy:
                 new_bullets.append(bullet)
         self.bullets = new_bullets
 
+    # Let the enemy shoot a bullet
     def shoot_bullet(self):
         if len(self.bullets) < self.max_bullet_num:
             bullet = EnemyBullet(self.x, self.y)
             self.bullets.append(bullet)
 
+    # Move the enemy in the direction of its velocity
     def move(self):
         self.x += self.x_vel
         self.y += self.y_vel
@@ -74,6 +78,7 @@ class Enemy:
         self.theta += self.rotation_speed
         self.theta = self.theta % 360
 
+    # Make the enemy take damage
     def take_damage(self):
         self.health -= 1
         self.rotation_speed += enemyRotationSpeedIncrement

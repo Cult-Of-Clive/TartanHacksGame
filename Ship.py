@@ -6,6 +6,7 @@ from Constants import *
 
 class Ship:
 
+    # The ship constructor
     def __init__(self, x, y, color, speed, bullet_num, facing_up):
 
         self.force_field = False
@@ -27,6 +28,7 @@ class Ship:
 
         self.laser_effect = pygame.mixer.Sound(laser_sound_file)
 
+    # Gets a list of the ship's vertices
     def ship_coordinates(self):
         base = shipWidth / 2
         return [
@@ -35,16 +37,19 @@ class Ship:
             (self.x, self.y + self.facing_up * shipHeight)
         ]
 
+    # Moves the ship left
     def move_left(self):
         self.x -= self.speed
         if self.x < 0:
             self.x = 0
 
+    # Moves the ship right
     def move_right(self):
         self.x += self.speed
         if self.x > screenSize[0]:
             self.x = screenSize[0]
 
+    # Moves the ship down
     def move_down(self):
         self.y += self.speed
         if self.facing_up == -1 and self.y > screenSize[1]:
@@ -52,6 +57,7 @@ class Ship:
         elif self.facing_up == 1 and self.y + shipHeight > 7 * screenSize[1] / 8:
             self.y = 7 * screenSize[1] / 8 - shipHeight
 
+    # Moves the ship up
     def move_up(self):
         self.y -= self.speed
         if self.facing_up == -1 and self.y - shipHeight < screenSize[1] / 8:
@@ -59,10 +65,12 @@ class Ship:
         elif self.facing_up == 1 and self.y < 0:
             self.y = 0
 
+    # Activates the ship force field
     def activate_force_field(self):
         self.force_field = True
         self.force_field_uses = 2
 
+    # Draws the ship
     def draw(self, window):
         pygame.draw.polygon(window, self.color, self.ship_coordinates())
         if self.force_field:
@@ -84,6 +92,7 @@ class Ship:
                 new_bullets.append(bullet)
         self.bullets = new_bullets
 
+    # Shoot a bullet, if possible
     def shoot_bullet(self):
         if len(self.bullets) < self.num_bullets:
             bullet = Bullet(self.x, self.y + self.facing_up * shipHeight, self.facing_up * bulletSpeed, self.color)

@@ -7,6 +7,8 @@ import random
 
 
 class Powerup:
+
+    # The constructor for powerups
     def __init__(self):
         self.color = (0, 0, 0)
         self.entry_side = random.randint(0, 2)
@@ -25,10 +27,12 @@ class Powerup:
 
         self.y = random.randint(0, screenSize[1])
 
+    # Draw the powerup
     def draw(self, screen):
         pygame.draw.circle(screen, powerupColor, (self.x, self.y), powerupRadius, powerupThickness)
         pygame.draw.circle(screen, self.color, (self.x, self.y), powerupRadius - powerupThickness)
 
+    # Move the powerup
     def move(self):
         self.x += self.x_vel
         self.y += self.y_vel
@@ -38,6 +42,7 @@ class Powerup:
         if self.y < 0 or self.y > screenSize[1]:
             self.y_vel = -self.y_vel
 
+    # Take red-colored damage
     def take_red_damage(self, damage):
         red, green, blue = self.color
 
@@ -51,6 +56,7 @@ class Powerup:
                 green = 0
         self.color = (red, green, blue)
 
+    # Take green-colored damage
     def take_green_damage(self, damage):
         red, green, blue = self.color
 
